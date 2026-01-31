@@ -32,7 +32,8 @@ def build_transformer():
 def load_vectorizers():
     with open("source_vocab.txt", "r", encoding="utf-8") as f:
         src_raw = [line.strip() for line in f if line.strip()]
-    src_vocab = list(dict.fromkeys(src_raw))
+    # Use dict.fromkeys for uniqueness, then slice to avoid the size error
+    src_vocab = list(dict.fromkeys(src_raw))[:VOCAB_SIZE - 2]
     
     source_vectorizer = TextVectorization(
         max_tokens=VOCAB_SIZE,
@@ -42,7 +43,8 @@ def load_vectorizers():
 
     with open("target_vocab.txt", "r", encoding="utf-8") as f:
         tgt_raw = [line.strip() for line in f if line.strip()]
-    tgt_vocab = list(dict.fromkeys(tgt_raw))
+    # Do the same for the target vocabulary
+    tgt_vocab = list(dict.fromkeys(tgt_raw))[:VOCAB_SIZE - 2]
 
     target_vectorizer = TextVectorization(
         max_tokens=VOCAB_SIZE,
