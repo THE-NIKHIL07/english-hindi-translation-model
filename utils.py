@@ -31,7 +31,8 @@ def build_transformer():
 
 def load_vectorizers():
     with open("source_vocab.txt", "r", encoding="utf-8") as f:
-        src_vocab = [line.strip() for line in f]
+        src_raw = [line.strip() for line in f if line.strip()]
+    src_vocab = list(dict.fromkeys(src_raw))
     
     source_vectorizer = TextVectorization(
         max_tokens=VOCAB_SIZE,
@@ -40,12 +41,13 @@ def load_vectorizers():
     source_vectorizer.set_vocabulary(src_vocab)
 
     with open("target_vocab.txt", "r", encoding="utf-8") as f:
-        tgt_vocab = [line.strip() for line in f]
+        tgt_raw = [line.strip() for line in f if line.strip()]
+    tgt_vocab = list(dict.fromkeys(tgt_raw))
 
     target_vectorizer = TextVectorization(
         max_tokens=VOCAB_SIZE,
         output_sequence_length=HINDI_SEQUENCE_LENGTH
     )
-    target_vectorizer.set_vocabulary(list(dict.fromkeys(tgt_vocab)))
+    target_vectorizer.set_vocabulary(tgt_vocab)
 
     return source_vectorizer, target_vectorizer
