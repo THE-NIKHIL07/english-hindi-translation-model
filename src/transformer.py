@@ -20,33 +20,37 @@ def positional_encoding(model_size,HINDI_SEQUENCE_LENGTH):
   return tf.cast(out,dtype=tf.float32)
 
 
-
 @tf.keras.utils.register_keras_serializable()
-class Embeddings(Layer):
-    def __init__(self, sequence_length, vocab_size, embed_dim,name=None,):
-        super(Embeddings, self).__init__(name=name)
+class Embeddings(tf.keras.layers.Layer):
+    def __init__(self, sequence_length, vocab_size, embed_dim, name=None):
+        super().__init__(name=name)
+
         self.sequence_length = sequence_length
         self.vocab_size = vocab_size
         self.embed_dim = embed_dim
-        self.token_embedding = Embedding(
-            input_dim=vocab_size, output_dim=embed_dim, mask_zero=True
+
+        self.token_embedding = tf.keras.layers.Embedding(
+            input_dim=vocab_size,
+            output_dim=embed_dim,
+            mask_zero=True,
+            name="embedding"   # ✅ ABSOLUTELY REQUIRED
         )
 
     def call(self, inputs):
-        embedded_token = self.token_embedding(inputs)  # mask handled automatically
-        embedded_positions = positional_encoding(self.embed_dim, self.sequence_length)
+        embedded_token = self.token_embedding(inputs)
+        embedded_positions = positional_encoding(
+            self.embed_dim, self.sequence_length
+        )
         return embedded_token + embedded_positions
 
-        
     def get_config(self):
-            config = super().get_config()
-            config.update({
-                "sequence_length": self.sequence_length,
-                "vocab_size": self.vocab_size,
-                "embed_dim": self.embed_dim
-            })
-            return config
-
+        config = super().get_config()
+        config.update({
+            "sequence_length": self.sequence_length,
+            "vocab_size": self.vocab_size,
+            "embed_dim": self.embed_dim,
+        })
+        return config
 
 
 @tf.keras.utils.register_keras_serializable()
