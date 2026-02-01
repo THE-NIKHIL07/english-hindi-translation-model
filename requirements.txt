@@ -6,5 +6,4 @@ tqdm==4.66.1
 typing-extensions==4.5.0
 fastapi
 uvicorn[standard]
-tensorflow==2.13.1
 pydantic
