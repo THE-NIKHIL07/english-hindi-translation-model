@@ -4,8 +4,8 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import tensorflow as tf
-from utils import load_vectorizers, build_transformer
-
+from utils import  build_transformer
+from new import load_vectorizers
 VOCAB_SIZE = 25000
 ENGLISH_SEQUENCE_LENGTH = 40
 HINDI_SEQUENCE_LENGTH = 40
