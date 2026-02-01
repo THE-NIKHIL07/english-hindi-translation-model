@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>English → Hindi Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        footer {
+            margin-top: 50px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>English → Hindi Translator</h1>
+    <input type="text" id="englishText" placeholder="Enter English text" size="50">
+    <button onclick="translateText()">Translate</button>
+    <p id="note"></p>
+    <p id="translation" style="font-size:20px; color:blue;"></p>
+
+    <footer>MADE BY THE-NIKHIL07 © 2026</footer>
+
+    <script>
+        async function translateText() {
+            const text = document.getElementById("englishText").value;
+            const response = await fetch('/translate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
+            const data = await response.json();
+            document.getElementById("translation").innerText = data.translation;
+            document.getElementById("note").innerText = data.note;
+        }
+    </script>
+</body>
+</html>
