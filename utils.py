@@ -30,26 +30,24 @@ def build_transformer():
     return transformer
 
 def load_vectorizers():
-    with open("source_vocab.txt", "r", encoding="utf-8") as f:
-        src_raw = [line.strip() for line in f if line.strip()]
-    # Use dict.fromkeys for uniqueness, then slice to avoid the size error
-    src_vocab = list(dict.fromkeys(src_raw))[:VOCAB_SIZE - 2]
-    
-    source_vectorizer = TextVectorization(
-        max_tokens=VOCAB_SIZE,
-        output_sequence_length=ENGLISH_SEQUENCE_LENGTH
-    )
-    source_vectorizer.set_vocabulary(src_vocab)
-
-    with open("target_vocab.txt", "r", encoding="utf-8") as f:
-        tgt_raw = [line.strip() for line in f if line.strip()]
-    # Do the same for the target vocabulary
-    tgt_vocab = list(dict.fromkeys(tgt_raw))[:VOCAB_SIZE - 2]
+    source_vectorizer_model = load_model("source_vectorizer_model.keras")
+    source_layer = source_vectorizer_model.layers[1]
 
     target_vectorizer = TextVectorization(
         max_tokens=VOCAB_SIZE,
         output_sequence_length=HINDI_SEQUENCE_LENGTH
     )
-    target_vectorizer.set_vocabulary(tgt_vocab)
 
-    return source_vectorizer, target_vectorizer
+    with open("target_vocab.txt", "r", encoding="utf-8") as f:
+        vocab = [line.strip() for line in f]
+
+    seen = set()
+    unique_vocab = []
+    for w in vocab:
+        if w not in seen:
+            seen.add(w)
+            unique_vocab.append(w)
+
+    target_vectorizer.set_vocabulary(unique_vocab)
+
+    return source_layer, target_vectorizer
